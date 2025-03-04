@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8005:8005"
+    environment:
+      - AWS_REGION=us-east-1
+    depends_on:
+      - s3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  s3:
+    image: "localstack/localstack"
+    environment:
+      - SERVICES=s3
+      - DEFAULT_REGION=us-east-1
+    ports:
+      - "4566:4566"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+networks:
+  default:
+    driver: bridge
+
+# TODO: Consider adding a reverse proxy like Nginx for better handling of requests and SSL termination. Implement health checks for the services to ensure they are running properly. Add a volume for persistent data storage if needed. Configure environment variables for different deployment environments (development, staging, production). Ensure proper network configurations for secure communication between services. Implement logging and monitoring solutions for better observability. Consider using a service mesh for advanced traffic management and security features. Optimize resource allocation for each service to ensure efficient use of resources. Use secrets management for handling sensitive information securely. Implement auto-scaling policies to handle varying loads efficiently. Ensure the application is stateless and can be scaled horizontally. Add labels for better service management and monitoring. Use a centralized configuration management system for managing application settings across environments. Implement a CI/CD pipeline for automated deployments and testing.
